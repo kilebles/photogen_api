@@ -23,3 +23,15 @@ class Settings(BaseSettings):
 
      
 config = Settings()
+
+TORTOISE_ORM = {
+    "connections": {
+        "default": config.DATABASE_URL,
+    },
+    "apps": {
+        "models": {
+            "models": ["photogen_api.database.models", "aerich.models"],
+            "default_connection": "default",
+        },
+    },
+}
