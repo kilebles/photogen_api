@@ -1,0 +1,49 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Poetry
+poetry.lock
+.poetry/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Pytest / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+.pytest_cache/
+coverage.xml
+
+# Logs
+*.log
+
+# dotenv
+.env
+.env.*
+
+# Aerich
+aerich.ini
+aerich/
+*.sqlite3
+
+# Unix socket, PID files
+*.sock
+*.pid
+
+# Docker
+docker-compose.override.yml
+
+# System
+.DS_Store
+Thumbs.db
