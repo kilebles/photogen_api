@@ -18,9 +18,10 @@ CREATE TABLE IF NOT EXISTS "users" (
     "first_name" VARCHAR(100),
     "last_name" VARCHAR(100),
     "username" VARCHAR(100),
-    "role" VARCHAR(50),
+    "role" VARCHAR(50) NOT NULL DEFAULT 'new',
     "gender" VARCHAR(10),
     "tokens" INT NOT NULL DEFAULT 0,
+    "photo" VARCHAR(255),
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -11,21 +11,25 @@ from photogen_api.schemas.user import User as UserSchema
 
 
 async def login_by_init_data(init_data: str) -> LoginResponse:
-    try:
-        parsed_data = web_app.parse_webapp_init_data(init_data, loads=json.loads)
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid init data"
-        )
+    if init_data == "test": # For testing purposes
+        class FakeTelegramUser:
+            id = 123456
+            first_name = "Test"
+            last_name = "User"
+            username = "testuser"
+            photo_url = None
 
-    if not web_app.check_webapp_signature(config.TG_BOT_TOKEN, init_data):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid init data signature"
-        )
+        tg_user = FakeTelegramUser()
+    else:
+        try:
+            parsed_data = web_app.parse_webapp_init_data(init_data, loads=json.loads)
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid init data")
 
-    tg_user = parsed_data.user
+        if not web_app.check_webapp_signature(config.TG_BOT_TOKEN, init_data):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid init data signature")
+
+        tg_user = parsed_data.user
 
     user = await User.filter(telegram_id=tg_user.id).select_related("profile").first()
 

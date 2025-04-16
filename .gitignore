@@ -47,3 +47,6 @@ docker-compose.override.yml
 # System
 .DS_Store
 Thumbs.db
+
+# Mediafiles
+media/

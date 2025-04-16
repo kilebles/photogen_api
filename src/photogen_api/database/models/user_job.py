@@ -3,7 +3,7 @@ from tortoise.models import Model
 
 
 class UserJob(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     user = fields.ForeignKeyField("models.User", related_name="jobs")
     job_id = fields.CharField(max_length=100)
     job_type = fields.CharField(max_length=50)

@@ -9,7 +9,7 @@ class Token(BaseModel):
     refresh_token: str
     
     model_config = ConfigDict(
-        alias_gnerator=to_camel,
+        alias_generator=to_camel,
         populate_by_name=True
     )
 

@@ -3,7 +3,7 @@ from tortoise.models import Model
 
 
 class UserProfile(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     user = fields.OneToOneField("models.User", related_name="profile")
     lora_id = fields.CharField(max_length=100, null=True)
     status = fields.CharField(max_length=50, null=True)

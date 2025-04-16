@@ -1,5 +1,5 @@
 from urllib.parse import quote_plus
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -15,18 +15,17 @@ class Settings(BaseSettings):
     
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     TG_BOT_TOKEN: str
-    
+
     @property
     def DATABASE_URL(self) -> str:
         encoded_pass = quote_plus(self.DB_PASS)
         return f"postgres://{self.DB_USER}:{encoded_pass}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
-    class Config:
-            env_file = ".env"
-
+    model_config = SettingsConfigDict(env_file=".env")
+     
      
 config = Settings()
 
