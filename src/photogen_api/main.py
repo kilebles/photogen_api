@@ -3,6 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from photogen_api.database.db import init_db
 from photogen_api.routes import router
 from photogen_api.config import config
 
@@ -16,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# init_db(app)
+init_db(app)
 app.include_router(router)
 
 if __name__ == "__main__":

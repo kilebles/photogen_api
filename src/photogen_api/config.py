@@ -7,6 +7,17 @@ class Settings(BaseSettings):
     APP_PORT: int
     APP_URL: str
     
+    DB_HOST: str
+    DB_PORT: int
+    DB_NAME: str
+    DB_USER: str
+    DB_PASS: str
+    
+    @property
+    def DATABASE_URL(self) -> str:
+        encoded_pass = quote_plus(self.DB_PASS)
+        return f"postgres://{self.DB_USER}:{encoded_pass}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
     class Config:
             env_file = ".env"
 
