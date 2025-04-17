@@ -1,7 +1,5 @@
 from tortoise import fields
 from tortoise.models import Model
-
-
 from tortoise import fields
 from tortoise.models import Model
 
@@ -10,7 +8,11 @@ class Generation(Model):
     id = fields.IntField(primary_key=True)
     user = fields.ForeignKeyField("models.User", related_name="generations")
     job = fields.ForeignKeyField("models.UserJob", related_name="generations", null=True)
-    category = fields.ForeignKeyField("models.Category", related_name="generations")
+    category = fields.ForeignKeyField(
+        "models.Category",
+        related_name="generations",
+        null=True
+    )
     style = fields.ForeignKeyField("models.Style", related_name="generations", null=True)
 
     image_url = fields.CharField(max_length=255)

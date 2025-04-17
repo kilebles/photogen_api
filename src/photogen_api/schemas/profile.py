@@ -22,3 +22,25 @@ class GetProfilesResponse(StatusResponse):
         alias_generator=to_camel,
         populate_by_name=True
     )
+
+
+class ProfileWithMetadata(BaseModel):
+    id: int
+    lora_id: str | None = None
+    status: str | None = None
+    job_id: int | None = None
+    photos: List[str] = []
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True
+    )
+
+
+class GetProfilesWithMetaResponse(StatusResponse):
+    profiles: List[ProfileWithMetadata]
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True
+    )

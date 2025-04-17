@@ -42,6 +42,25 @@ class RefreshTokenResponse(BaseModel):
     )
 
 
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+
+class RefreshTokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+
 # Forward ref для LoginResponse
 from .user import User
 LoginResponse.model_rebuild()

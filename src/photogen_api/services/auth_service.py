@@ -5,8 +5,8 @@ from aiogram.utils import web_app
 from photogen_api.config import config
 from photogen_api.database.models.user import User
 from photogen_api.database.models.user_profile import UserProfile
-from photogen_api.auth.jwt import create_access_token, create_refresh_token
-from photogen_api.schemas.auth import LoginResponse, Token
+from photogen_api.auth.jwt import create_access_token, create_refresh_token, validate_refresh_token
+from photogen_api.schemas.auth import LoginResponse, RefreshTokenResponse, Token
 from photogen_api.schemas.user import User as UserSchema
 
 
@@ -58,3 +58,16 @@ async def login_by_init_data(init_data: str) -> LoginResponse:
     )
 
     return LoginResponse(success=True, user=user_schema)
+
+
+async def refresh_tokens(refresh_token: str) -> RefreshTokenResponse:
+    user = await validate_refresh_token(refresh_token)
+
+    payload = {"sub": str(user.id)}
+    new_access = create_access_token(payload)
+    new_refresh = create_refresh_token(payload)
+
+    return RefreshTokenResponse(
+        access_token=new_access,
+        refresh_token=new_refresh,
+    )
