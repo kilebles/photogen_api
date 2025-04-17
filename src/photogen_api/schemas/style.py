@@ -7,6 +7,8 @@ from photogen_api.utils import to_camel
 class Style(BaseModel):
     id: int
     title: str
+    prompt: str
+    position: int
 
     model_config = ConfigDict(
         alias_generator=to_camel,
