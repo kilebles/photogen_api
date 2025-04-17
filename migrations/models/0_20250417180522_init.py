@@ -5,12 +5,17 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     return """
         CREATE TABLE IF NOT EXISTS "categories" (
     "id" SERIAL NOT NULL PRIMARY KEY,
-    "name" VARCHAR(100) NOT NULL UNIQUE
+    "gender" VARCHAR(10),
+    "title" VARCHAR(100) NOT NULL UNIQUE,
+    "prompt" TEXT,
+    "preview" VARCHAR(255),
+    "position" INT NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS "styles" (
     "id" SERIAL NOT NULL PRIMARY KEY,
-    "name" VARCHAR(100) NOT NULL UNIQUE,
-    "category_id" INT NOT NULL REFERENCES "categories" ("id") ON DELETE CASCADE
+    "title" VARCHAR(100) NOT NULL UNIQUE,
+    "prompt" TEXT NOT NULL,
+    "position" INT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "users" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -38,8 +43,10 @@ CREATE TABLE IF NOT EXISTS "generations" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "image_url" VARCHAR(255) NOT NULL,
     "prompt" TEXT NOT NULL,
+    "resolution" VARCHAR(50),
     "status" VARCHAR(50) NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "category_id" INT NOT NULL REFERENCES "categories" ("id") ON DELETE CASCADE,
     "job_id" INT REFERENCES "user_jobs" ("id") ON DELETE CASCADE,
     "style_id" INT REFERENCES "styles" ("id") ON DELETE CASCADE,
