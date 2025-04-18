@@ -30,7 +30,7 @@ async def generate_image(request: GenerateRequest, user: User) -> GenerateRespon
         user=user,
         job_id=external_job_id,
         job_type="generation",
-        status="waiting",
+        status="pending",
     )
 
     return GenerateResponse(success=True, job_id=job.id)
