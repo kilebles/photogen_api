@@ -13,6 +13,7 @@ class Gender(str, Enum):
 class JobStatus(str, Enum):
     PENDING = "pending"
     COMPLETED = "completed"
+    
     ERROR = "error"
 
 

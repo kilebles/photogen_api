@@ -49,7 +49,15 @@ async def replicate_webhook(request: Request):
     if not job:
         return {"success": True}
 
-    job.status = status_
+    status_map = {
+        "starting": "pending",
+        "processing": "pending",
+        "succeeded": "completed",
+        "failed": "error",
+    }
+    internal_status = status_map.get(status_, "error")
+
+    job.status = internal_status
     await job.save()
 
     urls = output if isinstance(output, list) else [output]
@@ -62,8 +70,8 @@ async def replicate_webhook(request: Request):
             image_url=url,
             prompt="",
             resolution=None,
-            status=status_,
+            status=internal_status,
         )
 
-    logger.info(f"[Replicate] job {job.id} → {status_}, {len(urls)} images")
+    logger.info(f"[Replicate] job {job.id} → {internal_status}, {len(urls)} images")
     return {"success": True}

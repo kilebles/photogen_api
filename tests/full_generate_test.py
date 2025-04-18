@@ -64,7 +64,7 @@ async def test_full_generation_flow(client: AsyncClient, monkeypatch):
     assert hook_resp.json() == {"success": True}
 
     job = await UserJob.get(id=job_pk)
-    assert job.status == "succeeded"
+    assert job.status == "completed"
 
     gens = await Generation.filter(job_id=job_pk).order_by("id")
     assert len(gens) == 2
