@@ -11,7 +11,7 @@ async def start_replicate_generation(prompt: str, webhook_id: str) -> str:
         "Content-Type": "application/json",
     }
     payload = {    
-        # "model": config.REPLICATE_MODEL_SLUG,
+        "model": config.REPLICATE_MODEL_SLUG,
         "version": config.REPLICATE_MODEL_VERSION,
         "input": {"prompt": prompt},
         "webhook": f"{config.APP_URL}replicate/webhook",
