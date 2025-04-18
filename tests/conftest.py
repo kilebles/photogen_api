@@ -3,7 +3,7 @@ import pytest_asyncio
 
 from httpx import AsyncClient, ASGITransport
 from tortoise import Tortoise
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from photogen_api.main import app
 from photogen_api.config import config
@@ -37,3 +37,14 @@ async def client():
 def mock_signature_check():
     with patch("photogen_api.services.auth_service.web_app.check_webapp_signature", return_value=True):
         yield
+
+
+@pytest.fixture(autouse=True)
+def _mock_replicate_service(monkeypatch):
+    fake = AsyncMock(return_value="fake-external-job-id")
+    monkeypatch.setattr(
+        "photogen_api.services.generation_service.start_replicate_generation",
+        fake,
+    )
+    yield
+    

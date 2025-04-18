@@ -5,39 +5,35 @@ from photogen_api.database.models.user_job import UserJob
 from photogen_api.schemas.common import JobStatus
 from photogen_api.schemas.generation import CheckGenerateJobResponse, GenerateRequest, GenerateResponse, GetGenerationsResponse
 from photogen_api.database.models.user import User
+from photogen_api.services.replicate_service import start_replicate_generation
 
 
 async def generate_image(request: GenerateRequest, user: User) -> GenerateResponse:
-    if request.prompt and (request.category_id or request.style_id):
+
+    if request.prompt and not (request.category_id and request.style_id):
+        external_job_id = await start_replicate_generation(
+            prompt=request.prompt,
+            webhook_id=str(user.id),
+        )
+    elif request.category_id and request.style_id:
+        external_job_id = await start_replicate_generation(
+            prompt="",  # TODO: собрать prompt из category/style
+            webhook_id=str(user.id),
+        )
+    else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Укажите либо prompt, либо categoryId и styleId"
+            detail="Either prompt or both category_id and style_id must be provided",
         )
 
-    if not request.prompt and not (request.category_id and request.style_id):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Обязателен либо prompt, либо categoryId + styleId"
-        )
-
-    user_job = await UserJob.create(
+    job = await UserJob.create(
         user=user,
-        job_id="mock_job_id",
+        job_id=external_job_id,
         job_type="generation",
-        status="in_progress"
+        status="waiting",
     )
 
-    generation = await Generation.create(
-        user=user,
-        job=user_job,
-        category_id=request.category_id,
-        style_id=request.style_id,
-        prompt=request.prompt or "",
-        image_url="",
-        status="in_progress"
-    )
-
-    return GenerateResponse(success=True, job_id=user_job.id)
+    return GenerateResponse(success=True, job_id=job.id)
 
 
 async def check_generate_status(job_id: int, user_id: int) -> CheckGenerateJobResponse:

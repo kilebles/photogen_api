@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     TG_BOT_TOKEN: str
+    
+    REPLICATE_TOKEN: str
+    REPLICATE_WEBHOOK_SECRET: str
+    REPLICATE_API_URL: str
+    REPLICATE_MODEL_VERSION: str
+    REPLICATE_MODEL_SLUG: str
 
     @property
     def DATABASE_URL(self) -> str:
