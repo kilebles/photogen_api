@@ -16,7 +16,6 @@ async def start_replicate_generation(prompt: str, webhook_id: str) -> str:
         "input": {"prompt": prompt},
         "webhook": f"{config.APP_URL}replicate/webhook",
         "webhook_events_filter": ["completed"],
-        "webhook_id": webhook_id,
     }
     
     
