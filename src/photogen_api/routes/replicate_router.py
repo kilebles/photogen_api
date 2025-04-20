@@ -8,6 +8,7 @@ from fastapi import APIRouter, Request, HTTPException, status
 from photogen_api.config import config
 from photogen_api.database.models.user_job import UserJob
 from photogen_api.database.models.generation import Generation
+from photogen_api.database.models.user_profile import UserProfile
 
 router = APIRouter(tags=["Replicate"], prefix="/replicate")
 logger = logging.getLogger(__name__)
@@ -45,8 +46,7 @@ async def replicate_webhook(request: Request):
     status_ = data.get("status")
     output = data.get("output") or []
     input_data = data.get("input", {})
-    webhook_user_id = input_data.get("webhook_id")  # <--- вот тут!
-
+    webhook_user_id = input_data.get("webhook_id") 
     job = await UserJob.filter(job_id=pred_id).first()
     if not job:
         logging.warning(f"[Replicate] No job found for pred_id: {pred_id}")
@@ -62,6 +62,14 @@ async def replicate_webhook(request: Request):
 
     job.status = internal_status
     await job.save()
+    
+    if job.job_type == "training":
+        profile = await UserProfile.get_or_none(job_id=job.id)
+        if profile:
+            profile.status = internal_status
+            profile.lora_id = data.get("output_model") or "mock_lora_id"
+            await profile.save()
+            logger.info(f"[Replicate] Updated UserProfile {profile.id} → {internal_status}")
 
     urls = output if isinstance(output, list) else [output]
     for url in urls:

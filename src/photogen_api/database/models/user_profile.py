@@ -8,6 +8,7 @@ class UserProfile(Model):
     lora_id = fields.CharField(max_length=100, null=True)
     status = fields.CharField(max_length=50, null=True)
     job_id = fields.IntField(null=True)
+    photos = fields.JSONField(null=True)
 
     created_at = fields.DatetimeField(auto_now_add=True)
 
