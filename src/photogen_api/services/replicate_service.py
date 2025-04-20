@@ -10,14 +10,16 @@ async def start_replicate_generation(prompt: str, webhook_id: str) -> str:
         "Authorization": f"Token {config.REPLICATE_TOKEN}",
         "Content-Type": "application/json",
     }
-    payload = {    
+
+    payload = {
         "version": config.REPLICATE_MODEL_VERSION,
-        "input": {"prompt": prompt},
+        "input": {
+            "prompt": prompt,
+            "webhook_id": webhook_id
+        },
         "webhook": f"{config.APP_URL}replicate/webhook",
         "webhook_events_filter": ["completed"],
     }
-    
-    
 
     async with httpx.AsyncClient() as client:
         resp = await client.post(config.REPLICATE_API_URL, json=payload, headers=headers)
@@ -28,4 +30,3 @@ async def start_replicate_generation(prompt: str, webhook_id: str) -> str:
 
     data = resp.json()
     return data["id"]
-

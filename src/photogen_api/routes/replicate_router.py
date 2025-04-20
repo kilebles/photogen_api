@@ -44,9 +44,12 @@ async def replicate_webhook(request: Request):
     pred_id = data.get("id")
     status_ = data.get("status")
     output = data.get("output") or []
+    input_data = data.get("input", {})
+    webhook_user_id = input_data.get("webhook_id")  # <--- вот тут!
 
     job = await UserJob.filter(job_id=pred_id).first()
     if not job:
+        logging.warning(f"[Replicate] No job found for pred_id: {pred_id}")
         return {"success": True}
 
     status_map = {
@@ -63,12 +66,12 @@ async def replicate_webhook(request: Request):
     urls = output if isinstance(output, list) else [output]
     for url in urls:
         await Generation.create(
-            user_id=job.user_id,
+            user_id=job.user_id or int(webhook_user_id),
             job=job,
             category_id=None,
             style_id=None,
             image_url=url,
-            prompt="",
+            prompt=input_data.get("prompt", ""),
             resolution=None,
             status=internal_status,
         )
