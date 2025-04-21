@@ -40,7 +40,6 @@ aerich/
 # Unix socket, PID files
 *.sock
 *.pid
-
 # Docker
 docker-compose.override.yml
 
