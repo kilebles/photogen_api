@@ -1,0 +1,17 @@
+name: SSH Key Debug
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug-key:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check SSH Key content
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo "🧪 First 5 lines of ~/.ssh/id_rsa:"
+        head -n 5 ~/.ssh/id_rsa || echo "❌ can't read key"
+        echo "SSH_PRIVATE_KEY read successfully (if above is readable)"
