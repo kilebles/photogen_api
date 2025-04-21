@@ -20,11 +20,11 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-    - name: Deploy
+    - name: Deploy to server
       run: |
         ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd ${{ secrets.DP_PATH }}
+          cd /opt/photogen_api
           git pull origin main
-          docker compose down
-          docker compose up -d --build
+          sudo systemctl restart gunicorn
+          echo "Deployment completed successfully!"
         EOF
