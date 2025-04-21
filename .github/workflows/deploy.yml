@@ -13,6 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Debug SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > ~/.ssh/id_rsa
+        head -n 5 ~/.ssh/id_rsa || echo "EMPTY!"
+
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
