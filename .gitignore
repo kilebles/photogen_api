@@ -48,5 +48,7 @@ docker-compose.override.yml
 .DS_Store
 Thumbs.db
 
-# Mediafiles
+# Mediafiles\
 media/
+github_deploy_key
+github_deploy_key.pub
