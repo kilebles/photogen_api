@@ -17,7 +17,7 @@ async def generate_image(request: GenerateRequest, user: User) -> GenerateRespon
         )
     elif request.category_id and request.style_id:
         external_job_id = await start_replicate_generation(
-            prompt="",  # TODO: собрать prompt из category/style
+            prompt="",
             webhook_id=str(user.id),
         )
     else:

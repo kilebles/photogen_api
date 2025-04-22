@@ -63,7 +63,7 @@ async def start_replicate_training(user_id: int, image_paths: list[str]) -> str:
         client = replicate.Client(api_token=config.REPLICATE_TOKEN)
 
         destination = config.REPLICATE_TRAIN_MODEL_SLUG  
-        version     = config.REPLICATE_TRAIN_VERSION
+        version = config.REPLICATE_TRAIN_VERSION
 
         training = client.trainings.create(
             destination=destination,
