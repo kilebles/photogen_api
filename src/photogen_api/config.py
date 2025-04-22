@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     REPLICATE_FACE_SWAP_VERSION: str
     REPLICATE_CLAUDE_MODEL: str
     REPLICATE_MODEL_SLUG: str
+    REPLICATE_TRAIN_OWNER: str
 
     @property
     def DATABASE_URL(self) -> str:
