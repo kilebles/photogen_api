@@ -42,11 +42,13 @@ async def start_replicate_generation(prompt: str, webhook_id: str) -> str:
 async def start_replicate_training(user_id: int, image_paths: list[str]) -> str:
     """
     1) Собирает ZIP из локальных файлов image_paths
-    2) Пушит в public /media через StaticFiles
-    3) Создаёт модель в Replicate и запускает тренировку
+    2) Пушит его в public /media через StaticFiles
+    3) Запускает тренировку на существующей версии LoRA-модели
     4) Возвращает training_id
     """
-    
+    from uuid import uuid4
+    import zipfile, time
+
     zip_name = f"{uuid4().hex}.zip"
     media_dir = Path("media/profiles")
     media_dir.mkdir(parents=True, exist_ok=True)
@@ -60,23 +62,7 @@ async def start_replicate_training(user_id: int, image_paths: list[str]) -> str:
 
     def _sync_train():
         client = replicate.Client(api_token=config.REPLICATE_TOKEN)
-
-        model_owner = config.REPLICATE_TRAIN_VERSION.split("/", 1)[0]
-        model_name = f"{user_id}_avatar_{int(time.time())}"
-        try:
-            client.models.create(
-                owner=model_owner,
-                name=model_name,
-                visibility="private",
-                hardware="gpu-t4",
-                description="User fine‑tuned LoRA model",
-            )
-        except Exception as e:
-            if "already exists" not in str(e):
-                raise
-
         training = client.trainings.create(
-            destination=f"{model_owner}/{model_name}",
             version=config.REPLICATE_TRAIN_VERSION,
             input={
                 "input_images": archive_url,
@@ -98,7 +84,6 @@ async def start_replicate_training(user_id: int, image_paths: list[str]) -> str:
             webhook=f"{config.APP_URL.rstrip('/')}/replicate/webhook",
             webhook_events_filter=["completed"],
         )
-
         return training.id
 
     train_id = await anyio.to_thread.run_sync(_sync_train)
