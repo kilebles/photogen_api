@@ -9,7 +9,6 @@ env/
 venv/
 
 # Poetry
-poetry.lock
 .poetry/
 
 # VSCode / IDE
