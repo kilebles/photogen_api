@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     REPLICATE_CLAUDE_MODEL: str
     REPLICATE_MODEL_SLUG: str
     REPLICATE_TRAIN_OWNER: str
+    REPLICATE_TRAIN_MODEL_SLUG: str
 
     @property
     def DATABASE_URL(self) -> str:
