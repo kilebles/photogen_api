@@ -1,3 +1,5 @@
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from fastapi import FastAPI
@@ -7,7 +9,13 @@ from photogen_api.database.db import init_db
 from photogen_api.routes import router
 from photogen_api.config import config
 
+MEDIA_ROOT = Path("media")
+
+MEDIA_ROOT.mkdir(exist_ok=True)
+
 app = FastAPI(title="Photogen API")
+
+app.mount("/media", StaticFiles(directory=MEDIA_ROOT), name="media")
 
 app.add_middleware(
     CORSMiddleware,

@@ -8,11 +8,11 @@ from unittest.mock import AsyncMock, patch
 @pytest.mark.asyncio
 async def test_upload_profile(client: AsyncClient):
     fake_job_id = "fake-job-id-123"
-    mock_fn = AsyncMock(return_value=fake_job_id)
+    mock_train = AsyncMock(return_value=fake_job_id)
 
     with patch(
-        "photogen_api.routes.users_router.start_replicate_generation",
-        new=mock_fn,
+        "photogen_api.routes.users_router.start_replicate_training",
+        new=mock_train,
     ):
         login_resp = await client.post(
             "/users/loginByInitData",
@@ -21,6 +21,7 @@ async def test_upload_profile(client: AsyncClient):
         )
         assert login_resp.status_code == 200
         token = login_resp.json()["user"]["token"]["accessToken"]
+        user_id = login_resp.json()["user"]["id"]  # int
 
         files = [
             ("images", ("image1.png", b"fake data 1", "image/png")),
@@ -39,10 +40,10 @@ async def test_upload_profile(client: AsyncClient):
     assert len(body["images"]) == len(files)
 
     for returned, sent in zip(body["images"], files):
-        original_name = sent[1][0]
+        original = sent[1][0]
         assert returned.startswith("/media/profiles/")
-        assert returned.endswith(original_name)
-        assert re.search(r"/media/profiles/[0-9a-f]{32}_"+re.escape(original_name)+r"$", returned)
+        assert returned.endswith(original)
+        assert re.match(r"^/media/profiles/[0-9a-f]{32}_" + re.escape(original) + r"$", returned)
 
-    user_id = str(login_resp.json()["user"]["id"])
-    mock_fn.assert_awaited_once_with(prompt="train profile", webhook_id=user_id)
+    expected_paths = body["images"]
+    mock_train.assert_awaited_once_with(user_id=user_id, image_paths=expected_paths)
