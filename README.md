@@ -1,5 +1,3 @@
-# PhotogenAPI
-
 ## Логика
 
 - **Auth**: залогиниться через WebApp или "test" для локалки
@@ -29,14 +27,16 @@ src/photogen_api
 
 1. `poetry install`
 2. Миграции: `aerich upgrade head`
-3. Запуск: `uvicorn src.photogen_api.main:app --reload`
+3. Запуск локально: poetry run python src/photogen_api/main.py
+4. Запуск тестов: poetry run pytest
+5. Запуск: `uvicorn src.photogen_api.main:app --reload`
 
 ## Готово
 
 - Сохранение фоток и ZIP
 - StaticFiles на `/media`
 - Запуск тренинга у Replicate (текущий/существующий LoRA)
-- Webhook-обработка статусов + запись в БД
+- Webhook-обработка статусов + запись в БДgit 
 - REST-ручки для генерации картинок и чек-статуса
 
 ## В разработку
