@@ -53,7 +53,8 @@ jobs:
 
             echo "Pulling latest code"
             git pull origin main
-
+            echo "Installing dependencies"
+            poetry install --no-interaction --no-root
             echo "Restarting gunicorn"
             sudo systemctl restart gunicorn
 
