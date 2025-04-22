@@ -6,7 +6,7 @@
 - **/replicate/webhook**: ловим колбэк от Replicate, фигачим статус в БД, сохраняем `lora_id` и ссылки на результаты
 - **/generations**:
   - `POST /generations` -> старт генерации по `prompt` или `category_id + style_id`, возвращаем `jobId`
-  - `GET /generations/{jobId}` → чек статуса + URL картинок
+  - `GET /generations/{jobId}` -> чек статуса + URL картинок
 - **/users/generations**: листинг всех своих сгенеренных картинок
 - **/users/profiles/meta**: список своих профилей + мета (статус, фото)
 
@@ -36,12 +36,12 @@ src/photogen_api
 - Сохранение фоток и ZIP
 - StaticFiles на `/media`
 - Запуск тренинга у Replicate (текущий/существующий LoRA)
-- Webhook-обработка статусов + запись в БДgit 
+- Webhook-обработка статусов + запись в БД
 - REST-ручки для генерации картинок и чек-статуса
 
 ## В разработку
 
-- Фоновые воркеры для многошагового pipeline (face‑swap, ratio → godmode)
+- Фоновые воркеры для многошагового pipeline (face‑swap -> ratio -> godmode)
 - Очереди, retry, FSM‑подобные стейты (Celery/Redis или собственный планировщик)
 - WebSocket/SSE для realtime уведомлений
 
