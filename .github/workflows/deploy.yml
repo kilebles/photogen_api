@@ -18,31 +18,15 @@ jobs:
           echo "Creating .ssh directory"
           mkdir -p ~/.ssh
 
-          echo "Dumping first 5 lines of private key (masked by GitHub)"
+          echo "Dumping first 5 lines of private key (masked)"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" | head -n 5 || echo "EMPTY KEY"
 
-          echo "Writing key to id_rsa"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-
-          echo "Setting permissions on id_rsa"
           chmod 600 ~/.ssh/id_rsa
 
-          echo "Running ssh-keyscan"
+          echo "Scanning host key"
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-          echo "Showing known_hosts contents"
           cat ~/.ssh/known_hosts
-
-          echo "SSH setup complete"
-
-      - name: Debug SSH key length
-        run: |
-          echo "Key length (should be > 1500):"
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | wc -c
-
-      - name: Debug SERVER_IP value
-        run: |
-          echo "SERVER_IP is: ${{ secrets.SERVER_IP }}"
 
       - name: Deploy to server
         run: |
@@ -53,9 +37,11 @@ jobs:
 
             echo "Pulling latest code"
             git pull origin main
-            echo "Installing dependencies"
+
+            echo "Installing dependencies with Poetry"
             poetry install --no-interaction --no-root
-            echo "Restarting gunicorn"
+
+            echo "Restarting Gunicorn"
             sudo systemctl restart gunicorn
 
             echo "Deployment finished"
