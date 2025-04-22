@@ -1,17 +1,21 @@
-from typing import Optional
+from typing import TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict
 
 from photogen_api.utils import to_camel
+
+if TYPE_CHECKING:
+    from photogen_api.schemas.user import User
 
 
 class Token(BaseModel):
     access_token: str
     refresh_token: str
-    
+
     model_config = ConfigDict(
         alias_generator=to_camel,
-        populate_by_name=True
+        populate_by_name=True,
     )
+
 
 class LoginResponse(BaseModel):
     success: bool
@@ -19,26 +23,7 @@ class LoginResponse(BaseModel):
 
     model_config = ConfigDict(
         alias_generator=to_camel,
-        populate_by_name=True
-    )
-
-
-class RefreshTokenRequest(BaseModel):
-    refresh_token: str
-
-    model_config = ConfigDict(
-        alias_generator=to_camel,
-        populate_by_name=True
-    )
-
-
-class RefreshTokenResponse(BaseModel):
-    access: str
-    refresh: str
-
-    model_config = ConfigDict(
-        alias_generator=to_camel,
-        populate_by_name=True
+        populate_by_name=True,
     )
 
 
@@ -61,6 +46,5 @@ class RefreshTokenResponse(BaseModel):
     )
 
 
-# Forward ref для LoginResponse
 from .user import User
 LoginResponse.model_rebuild()

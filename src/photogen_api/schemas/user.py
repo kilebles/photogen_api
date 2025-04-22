@@ -1,9 +1,10 @@
 from enum import Enum
-from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
-from photogen_api.utils import to_camel
+from pydantic import BaseModel, ConfigDict
+
 from photogen_api.schemas.common import Gender, StatusResponse
+from photogen_api.utils import to_camel
 
 
 class UserRole(str, Enum):
@@ -22,16 +23,16 @@ class User(BaseModel):
 
     model_config = ConfigDict(
         alias_generator=to_camel,
-        populate_by_name=True
+        populate_by_name=True,
     )
-    
+
 
 class UpdateGenderRequest(BaseModel):
     gender: Gender
 
     model_config = ConfigDict(
         alias_generator=to_camel,
-        populate_by_name=True
+        populate_by_name=True,
     )
 
 
@@ -40,10 +41,9 @@ class UpdateGenderResponse(StatusResponse):
 
     model_config = ConfigDict(
         alias_generator=to_camel,
-        populate_by_name=True
+        populate_by_name=True,
     )
 
 
-# Forward ref для Token
 from .auth import Token
 User.model_rebuild()
